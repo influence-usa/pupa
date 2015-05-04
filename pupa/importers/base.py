@@ -7,7 +7,7 @@ import logging
 import datetime
 from pprint import PrettyPrinter
 from pupa.exceptions import DuplicateItemError
-from pupa.utils import get_pseudo_id, combine_dicts
+from pupa.utils import get_pseudo_id, combine_dicts, utcnow
 from pupa.utils.topsort import Network
 from opencivicdata.models import LegislativeSession
 from pupa.exceptions import UnresolvedIdError, DataImportError
@@ -195,7 +195,7 @@ class BaseImporter(object):
         # keep counts of all actions
         record = {
             'insert': 0, 'update': 0, 'noop': 0,
-            'start': datetime.datetime.utcnow(),
+            'start': utcnow(),
             'records': {
                 'insert': [],
                 'update': [],
@@ -216,7 +216,7 @@ class BaseImporter(object):
         # all objects are loaded, a perfect time to do inter-object resolution and other tasks
         self.postimport()
 
-        record['end'] = datetime.datetime.utcnow()
+        record['end'] = utcnow()
 
         return {self._type: record}
 
