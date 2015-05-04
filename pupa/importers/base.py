@@ -196,6 +196,11 @@ class BaseImporter(object):
         record = {
             'insert': 0, 'update': 0, 'noop': 0,
             'start': datetime.datetime.utcnow(),
+            'records': {
+                'insert': [],
+                'update': [],
+                'noop': [],
+            }
         }
 
         for json_id, data in self._prepare_imports(data_items):
@@ -205,6 +210,7 @@ class BaseImporter(object):
             self.json_to_db_id[json_id] = obj_id
             if data.get('source_identified', False):
                 self.json_to_sources[json_id] = data_sources
+            record['records'][what].append(obj_id)
             record[what] += 1
 
         # all objects are loaded, a perfect time to do inter-object resolution and other tasks
